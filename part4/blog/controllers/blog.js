@@ -9,6 +9,8 @@ router.get('/', async (request, response, next) => {
             path: 'user',
             populate: { path: 'blogs' }
         })
+
+        blogs.sort((a, b) => b.likes - a.likes)
         response.status(200).json(blogs)
 
     } catch (error) {
@@ -25,6 +27,7 @@ router.post('/',async (request, response, next) => {
         const body = request.body
         const blog = new Blog({ ...body, user: user._id })
         const savedBlog = await blog.save()
+        await savedBlog.populate('user')
         user.blogs = user.blogs.concat(savedBlog._id)
         user.save()
         response.status(201).json(savedBlog)
@@ -51,7 +54,7 @@ router.delete('/:id', async (request, response, next) => {
 
         // Remove blog from user's blogs array
         if (user) {
-            user.blogs = user.blogs.filter(b => b.toString() !== request.params.id)
+            user.blogs = user.blogs.filter(b => !!b && b.toString() !== request.params.id)
             await user.save()
         }
 
@@ -72,19 +75,14 @@ router.put('/:id', async (request, response, next) => {
             return response.status(404).json({ error: 'blog not found' })
         }
 
-        // Check if user is authorized to update blog
-        const user = request.user
-        if (!user) {
-            return response.status(401).json({ error: 'unauthorized' })
-        }
-        if (user._id.toString() !== blog.user.toString()) {
-            return response.status(401).json({ error: 'unauthorized' })
+        const toUpdateBlog = {
+            title: request.body.title,
+            url: request.body.url,
+            likes: request.body.likes,
+            author: request.body.author
         }
 
-        const toUpdateBlog =  {
-            ...request.body
-        }
-        const updatedNote = await Blog.findByIdAndUpdate(request.params.id, toUpdateBlog, { new: true })
+        const updatedNote = await Blog.findByIdAndUpdate(request.params.id, toUpdateBlog, { new: true }).populate('user')
         response.status(200).json(updatedNote)
     } catch (error) {
         next(error)
