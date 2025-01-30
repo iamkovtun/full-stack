@@ -41,12 +41,12 @@ const LoginForm = ({ ShowNotification, setUser }) => {
 
   return (
     <form onSubmit={handleLogin}>
-      <h2>Login</h2>
+      <h2>Blog App</h2>
       <div>
-          username: <input name={'username'} value={username} onChange={e => setUsername(e.target.value)}/>
+          username: <input name={'username'} data-testid='username' value={username} onChange={e => setUsername(e.target.value)}/>
       </div>
       <div>
-          password: <input name={'password'} value={password} onChange={e => setPassword(e.target.value)}/>
+          password: <input name={'password'} data-testid='password' value={password} onChange={e => setPassword(e.target.value)}/>
       </div>
       <div>
         <button type="submit">login</button>

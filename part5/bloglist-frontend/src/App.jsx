@@ -3,6 +3,7 @@ import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
+import BlogApp from './components/BlogApp'
 
 
 const App = () => {
@@ -51,7 +52,7 @@ const App = () => {
             <button onClick={handelLogout}>log out</button>
           </div>
           <br/>
-          <BlogForm ShowNotification={ShowNotification}/>
+          <BlogApp ShowNotification={ShowNotification}/>
         </>
       ) : (
         <LoginForm ShowNotification={ShowNotification} setUser={setUser}/>
