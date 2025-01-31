@@ -6,8 +6,7 @@ describe('Blog App', () => {
     })
 
     test('frontpage can be opened', async ({ page }) => {
-        const locator = page.getByText('Blog App')
-        await expect(locator).toBeVisible()
+        await expect(page.getByText('Blog App')).toBeVisible()
     });
 
     test('user can login', async ({ page }) => {      
@@ -37,10 +36,9 @@ describe('Blog App', () => {
             await page.getByTestId('author').fill(`${newBlog.author}`);
             await page.getByTestId('url').fill(`${newBlog.url}`);
             await page.getByRole('button', {name: 'create'}).click();
-            await page.getByText(`${newBlog.title}`, { exact: true }).waitFor();
-
-            await expect(page.getByText(newBlog.title)).toBeVisible();
-            await expect(page.getByText(newBlog.author)).toBeVisible();
+            const blogDiv = page.locator('.blog-list')
+            blogDiv.getByText(`${newBlog.title} ${newBlog.author}`).waitFor()
+            await expect(blogDiv.getByText(`${newBlog.title} ${newBlog.author}`)).toBeVisible();
 
 
             

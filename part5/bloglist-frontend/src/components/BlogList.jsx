@@ -3,7 +3,7 @@ import BlogItem from './BlogItem'
 
 const BlogList = ({ blogs, onLike, onRemove }) => {
   return (
-    <div>
+    <div className='blog-list'>
       {blogs.map(blog => (
         <BlogItem key={blog.id} blog={blog} onLike={onLike} onRemove={onRemove} />
       ))}
